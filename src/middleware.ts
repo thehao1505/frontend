@@ -10,6 +10,7 @@ async function verifyToken(token: string) {
       console.log("Expired token!");
       return null;
     }
+    return decoded_token;
   } catch (error) {
     console.log(error);
     return null;
@@ -36,3 +37,7 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/:path*", "/profile/:path*", "/login", "/sign-up"],
+};
