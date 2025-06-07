@@ -1,4 +1,6 @@
+import { MessageCard } from "@/features/messages/components/MessageCard";
+
 const MessagesPage = () => {
-  return <></>;
+  return <MessageCard />;
 };
 export default MessagesPage;
