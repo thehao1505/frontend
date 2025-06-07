@@ -1,4 +1,6 @@
+import { DashboardCard } from "@/features/dashboard/components/DashboardCard";
+
 const DashboardPage = () => {
-  return <></>;
+  return <DashboardCard />;
 };
 export default DashboardPage;

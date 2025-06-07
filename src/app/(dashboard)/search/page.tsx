@@ -1,4 +1,6 @@
+import { SearchCard } from "@/features/search/components/SearchCard";
+
 const SearchPage = () => {
-  return <></>;
+  return <SearchCard />;
 };
 export default SearchPage;

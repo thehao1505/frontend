@@ -3,9 +3,10 @@
 import { Home, Heart, Search, User, MessageCircle } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { usePathname } from "next/navigation";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 export const SidebarRoutes = () => {
-  // const { currentUser } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const pathname = usePathname();
   const onClick = () => {};
 
@@ -32,10 +33,10 @@ export const SidebarRoutes = () => {
           isActive={pathname === "/notifications"}
         />
         <SidebarItem
-          href={`/{currentUser?.username}`}
+          href={`/${currentUser?.username}`}
           icon={User}
           onClick={onClick}
-          // isActive={pathname === `/${currentUser?.username}`}
+          isActive={pathname === `/${currentUser?.username}`}
         />
       </ul>
     </div>

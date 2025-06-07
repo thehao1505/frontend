@@ -21,7 +21,7 @@ export const Navbar = ({
 
   return (
     <div className="flex items-center justify-center h-[60px] w-full">
-      <div className="fixed top-0 flex flex-col bg-neutral-950 w-[640px] z-50">
+      <div className="fixed top-0 flex flex-col w-[640px] z-50">
         <div className="h-[60px] flex items-center justify-between px-6">
           {showBackButton ? (
             <button

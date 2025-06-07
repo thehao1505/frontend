@@ -1,4 +1,6 @@
+import { NotificationCard } from "@/features/notifications/components/NotificationCard";
+
 const NotificationsPage = () => {
-  return <></>;
+  return <NotificationCard />;
 };
 export default NotificationsPage;
