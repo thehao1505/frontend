@@ -35,7 +35,7 @@ export default function Modal({ title, isOpen, onClose, children }: ModalProps) 
         </div>
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-neutral-400 hover:text-white"
+          className="absolute top-5 right-3 text-neutral-400 hover:text-white"
         >
           <X className="w-4 h-4" />
         </button>

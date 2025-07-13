@@ -33,10 +33,10 @@ export const SidebarRoutes = () => {
           isActive={pathname === "/notifications"}
         />
         <SidebarItem
-          href={`/${currentUser?.username}`}
+          href={`/@${currentUser?.username}`}
           icon={User}
           onClick={onClick}
-          isActive={pathname === `/${currentUser?.username}`}
+          isActive={pathname === `/@${currentUser?.username}`}
         />
       </ul>
     </div>
