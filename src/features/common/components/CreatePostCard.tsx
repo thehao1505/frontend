@@ -124,7 +124,7 @@ export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) =>
                   placeholder="What's on your mind?"
                   minRows={1}
                   maxRows={20}
-                  className="w-full bg-transparent border-none text-[15px] text-white focus:outline-none resize-none leading-snug placeholder:text-neutral-500 custom-messages-scroll"
+                  className="w-full bg-transparent border-none text-[15px] text-white focus:outline-none resize-none leading-snug placeholder:text-neutral-500 custom-messages-scroll-overlay"
                 />
 
                 {images.length > 0 && (

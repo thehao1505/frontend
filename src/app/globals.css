@@ -121,43 +121,47 @@
   }
 }
 
-.custom-messages-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+.custom-messages-scroll-overlay {
+  position: relative;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
-.custom-messages-scroll::-webkit-scrollbar {
+.custom-messages-scroll-overlay::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* Alternative approach - sử dụng ::before pseudo-element */
+.custom-messages-scroll-alt {
+  position: relative;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Ẩn scrollbar mặc định trên Firefox */
+  -ms-overflow-style: none; /* Ẩn scrollbar trên IE và Edge */
+}
+
+.custom-messages-scroll-alt::-webkit-scrollbar {
+  display: none; /* Ẩn scrollbar mặc định trên WebKit */
+}
+
+.custom-messages-scroll-alt::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 8px;
-}
-
-.custom-messages-scroll::-webkit-scrollbar-track {
+  height: 100%;
   background: transparent;
+  pointer-events: none; /* Không can thiệp vào các sự kiện chuột */
+  z-index: 1;
 }
 
-.custom-messages-scroll::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.custom-messages-scroll:hover::-webkit-scrollbar-thumb {
-  background: rgba(115, 115, 115, 0.5);
-}
-
-.custom-messages-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(115, 115, 115, 0.8) !important;
-}
-
-/* Ẩn mũi tên scroll bar */
-.custom-messages-scroll::-webkit-scrollbar-button {
-  display: none;
-}
-
-.custom-messages-scroll::-webkit-scrollbar-button:start:decrement,
-.custom-messages-scroll::-webkit-scrollbar-button:end:increment {
-  display: none;
-}
-
-.custom-messages-scroll:hover {
-  scrollbar-color: rgba(115, 115, 115, 0.5) transparent;
+/* Custom scrollbar indicator */
+.custom-messages-scroll-alt:hover::after {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(115, 115, 115, 0.3),
+    transparent
+  );
 }

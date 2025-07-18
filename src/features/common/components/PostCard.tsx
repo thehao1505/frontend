@@ -17,6 +17,7 @@ import {
 import { Heart, MoreVertical, Pencil, Trash2, TriangleAlert } from "lucide-react";
 import ShareButton from "./ShareButton";
 import ThreadReplyButton from "./ThreadReplyButton";
+import { HorizontalImageGallery } from "./HorizontalImageGallery";
 
 interface PostCardProp {
   currentUser: string | null;
@@ -182,7 +183,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
             )}
           </div>
 
-          {/* add horizonal gallery image here */}
+          <HorizontalImageGallery images={post.images} />
 
           <div className="flex items-center gap-6 text-muted-foreground text-sm pt-2">
             <button

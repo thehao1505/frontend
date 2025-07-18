@@ -158,9 +158,7 @@ export const ConnectionMessageCard = () => {
         <div className="flex flex-col h-full">
           <div
             ref={containerRef}
-            className={`flex-1 overflow-y-auto p-4 space-y-2 custom-messages-scroll ${
-              hasScrollbar ? "py-4 pl-4 pr-2" : "p-4"
-            }`}
+            className={`flex-1 overflow-y-auto p-4 space-y-2 custom-messages-scroll-overlay`}
           >
             <div ref={topObserverRef} />
             {isLoadingMore && (
