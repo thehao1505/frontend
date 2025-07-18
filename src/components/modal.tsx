@@ -10,7 +10,12 @@ type ModalProps = {
   children: ReactNode;
 };
 
-export default function Modal({ title, isOpen, onClose, children }: ModalProps) {
+export default function Modal({
+  title,
+  isOpen,
+  onClose,
+  children,
+}: ModalProps) {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();

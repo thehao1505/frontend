@@ -13,7 +13,12 @@ export const SidebarRoutes = () => {
   return (
     <div className="flex flex-col gap-y-4 flex-1 justify-center">
       <ul className="flex flex-col gap-y-3 px-2">
-        <SidebarItem href="/" icon={Home} onClick={onClick} isActive={pathname === "/"} />
+        <SidebarItem
+          href="/"
+          icon={Home}
+          onClick={onClick}
+          isActive={pathname === "/"}
+        />
         <SidebarItem
           href="/search"
           icon={Search}

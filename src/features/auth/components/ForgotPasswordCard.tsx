@@ -2,7 +2,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
@@ -23,9 +29,12 @@ export const ForgotPasswordCard = () => {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post(`${config.url}/api/v1/auth/forgot-password`, {
-        email,
-      });
+      const response = await axiosInstance.post(
+        `${config.url}/api/v1/auth/forgot-password`,
+        {
+          email,
+        }
+      );
 
       if (response.status === 201) {
         setSuccess(true);
@@ -62,7 +71,9 @@ export const ForgotPasswordCard = () => {
           <Card className="w-full h-full p-8">
             <CardHeader className="px-0 pt-0">
               <CardTitle>Forgot your password?</CardTitle>
-              <CardDescription>Enter your email to reset your password</CardDescription>
+              <CardDescription>
+                Enter your email to reset your password
+              </CardDescription>
             </CardHeader>
             {!!error && (
               <div

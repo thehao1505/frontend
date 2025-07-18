@@ -22,7 +22,12 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   const protectedRoutes = ["/", "/messsages", "/notifications"];
-  const authRoutes = ["/login", "/sign-up", "/reset-password", "/forgot-password"];
+  const authRoutes = [
+    "/login",
+    "/sign-up",
+    "/reset-password",
+    "/forgot-password",
+  ];
 
   const isAuthenticated = token && (await verifyToken(token));
 

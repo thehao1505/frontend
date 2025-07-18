@@ -1,44 +1,44 @@
 "use client";
 
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from "react";
 
 export const HorizontalImageGallery = ({ images }: { images: string[] }) => {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const onMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return
-    setIsDragging(true)
-    setStartX(e.pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-  }
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
 
   const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !scrollRef.current) return
-    e.preventDefault()
-    const x = e.pageX - scrollRef.current.offsetLeft
-    const walk = (x - startX) * 1.5
-    scrollRef.current.scrollLeft = scrollLeft - walk
-  }
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   const onMouseUpOrLeave = () => {
-    setIsDragging(false)
-  }
+    setIsDragging(false);
+  };
 
   const onTouchStart = (e: React.TouchEvent) => {
-    if (!scrollRef.current) return
-    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-  }
+    if (!scrollRef.current) return;
+    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    if (!scrollRef.current) return
-    const x = e.touches[0].pageX - scrollRef.current.offsetLeft
-    const walk = (x - startX) * 1.5
-    scrollRef.current.scrollLeft = scrollLeft - walk
-  }
+    if (!scrollRef.current) return;
+    const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   return (
     <>
@@ -65,5 +65,5 @@ export const HorizontalImageGallery = ({ images }: { images: string[] }) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};

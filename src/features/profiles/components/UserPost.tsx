@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
-export const UserPost = ({ user }: { user: User | null}) => {
+export const UserPost = ({ user }: { user: User | null }) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -74,11 +74,13 @@ export const UserPost = ({ user }: { user: User | null}) => {
   }, [hasMore, isLoading]);
 
   return (
-    <div
-      className="flex-1 custom-messages-scroll-overlay"
-    >
+    <div className="flex-1 custom-messages-scroll-overlay">
       {posts.map((post, index) => (
-        <PostCard key={`${post._id}-${index}`} post={post} currentUser={user?._id || null} />
+        <PostCard
+          key={`${post._id}-${index}`}
+          post={post}
+          currentUser={user?._id || null}
+        />
       ))}
       {hasMore && (
         <div ref={loader}>
@@ -87,4 +89,4 @@ export const UserPost = ({ user }: { user: User | null}) => {
       )}
     </div>
   );
-}
+};

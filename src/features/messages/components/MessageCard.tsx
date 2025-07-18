@@ -18,7 +18,8 @@ export const MessageCard = () => {
     const checkScrollbar = () => {
       if (scrollContainerRef.current) {
         const element = scrollContainerRef.current;
-        const hasVerticalScrollbar = element.scrollHeight > element.clientHeight;
+        const hasVerticalScrollbar =
+          element.scrollHeight > element.clientHeight;
         setHasScrollbar(hasVerticalScrollbar);
       }
     };
@@ -32,7 +33,9 @@ export const MessageCard = () => {
 
   const fetchConnection = useCallback(async () => {
     try {
-      const res = await axiosInstance.get(`${config.url}/api/v1/users/connection/user`);
+      const res = await axiosInstance.get(
+        `${config.url}/api/v1/users/connection/user`
+      );
       setConnections(res.data);
     } catch (error) {
       console.error("Error fetching post:", error);
@@ -65,8 +68,8 @@ export const MessageCard = () => {
             {isLoading && <p className="text-sm text-white">Loading</p>}
             {connections.length === 0 && !isLoading ? (
               <p className="text-sm text-neutral-400 text-center">
-                You don&apos;t have any connection now. <br /> You have to follow the others and get
-                follow back to Chat.
+                You don&apos;t have any connection now. <br /> You have to
+                follow the others and get follow back to Chat.
               </p>
             ) : (
               connections.map((connection) => (

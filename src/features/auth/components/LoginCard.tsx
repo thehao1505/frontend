@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { isEmail, config } from "@/lib/utils";
@@ -38,7 +44,10 @@ export const LoginCard = () => {
         ? { email: loginData.emailOrUsername, password: loginData.password }
         : { username: loginData.emailOrUsername, password: loginData.password };
 
-      const response = await axiosInstance.post(`${config.url}/api/v1/auth/login`, payload);
+      const response = await axiosInstance.post(
+        `${config.url}/api/v1/auth/login`,
+        payload
+      );
 
       if (response.status === 201) {
         const token = response.data.token.accessToken;
@@ -62,7 +71,9 @@ export const LoginCard = () => {
       <Card className="w-full h-full p-8">
         <CardHeader className="px-0 pt-0">
           <CardTitle>Login to Continue</CardTitle>
-          <CardDescription>Use your email or another service to continue</CardDescription>
+          <CardDescription>
+            Use your email or another service to continue
+          </CardDescription>
         </CardHeader>
         {!!error && (
           <div
@@ -77,26 +88,37 @@ export const LoginCard = () => {
           <form onSubmit={onCredentialsSignIn} className="space-y-2 5">
             <Input
               value={loginData.emailOrUsername}
-              onChange={(e) => setLoginData({ ...loginData, emailOrUsername: e.target.value })}
+              onChange={(e) =>
+                setLoginData({ ...loginData, emailOrUsername: e.target.value })
+              }
               placeholder="Email or Username"
               type="text"
               required
             />
             <Input
               value={loginData.password}
-              onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+              onChange={(e) =>
+                setLoginData({ ...loginData, password: e.target.value })
+              }
               placeholder="Password"
               type="password"
               required
             />
-            <Button disabled={isLoading} type="submit" size="lg" className="bg-neutral-950 w-full">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              size="lg"
+              className="bg-neutral-950 w-full"
+            >
               Continue
             </Button>
           </form>
           <Separator />
           <p className="text-xs text-muted-foreground mb-2">
             <Link href="/forgot-password">
-              <span className="text-sky-700 hover:underline">Forgot password?</span>
+              <span className="text-sky-700 hover:underline">
+                Forgot password?
+              </span>
             </Link>
           </p>
           <p className="text-xs text-muted-foreground">

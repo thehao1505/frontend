@@ -81,7 +81,9 @@ export default function EditProfileCard({
     }
   }, [currentUser?._id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (!userDetails) return;
     setUserDetails({
       ...userDetails,
@@ -142,11 +144,17 @@ export default function EditProfileCard({
                   alt={userDetails?.username}
                   className="object-cover"
                 />
-                <AvatarFallback>{userDetails?.username[0].toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {userDetails?.username[0].toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div className="flex flex-col text-sm font-medium pl-3 text-white">
-                <span className="text-[15px] font-semibold">{userDetails?.username}</span>
-                <span className="text-sm text-muted-foreground">{userDetails?.fullName}</span>
+                <span className="text-[15px] font-semibold">
+                  {userDetails?.username}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {userDetails?.fullName}
+                </span>
               </div>
             </div>
             <div className="flex items-center justify-end">

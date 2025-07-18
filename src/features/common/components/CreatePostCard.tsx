@@ -6,11 +6,22 @@ import { User } from "@/features/types";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Images, MapPin, Paperclip, Text, Smile, TriangleAlert } from "lucide-react";
+import {
+  Images,
+  MapPin,
+  Paperclip,
+  Text,
+  Smile,
+  TriangleAlert,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
-export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) => {
+export const CreatePostCard = ({
+  currentUser,
+}: {
+  currentUser: User | null;
+}) => {
   const [content, setContent] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [images, setImages] = useState<string[]>([]);
@@ -33,9 +44,13 @@ export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) =>
     files.forEach((file) => formData.append("files", file));
 
     try {
-      const res = await axiosInstance.post(`${config.url}/api/v1/upload/multiple`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axiosInstance.post(
+        `${config.url}/api/v1/upload/multiple`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       setImages((prev) => [...prev, ...res.data]);
     } catch (err) {
@@ -74,7 +89,9 @@ export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) =>
             alt={currentUser?.username}
             className="object-cover"
           />
-          <AvatarFallback>{currentUser?.username[0].toUpperCase()}</AvatarFallback>
+          <AvatarFallback>
+            {currentUser?.username[0].toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1 flex items-center justify-center">
           <input
@@ -95,7 +112,11 @@ export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) =>
       </div>
 
       {showPopup && (
-        <Modal title="New Thread" isOpen={showPopup} onClose={() => setShowPopup(false)}>
+        <Modal
+          title="New Thread"
+          isOpen={showPopup}
+          onClose={() => setShowPopup(false)}
+        >
           <div className="text-sm text-neutral-200">
             {!!error && (
               <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
@@ -110,7 +131,9 @@ export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) =>
                   alt={currentUser?.username}
                   className="object-cover"
                 />
-                <AvatarFallback>{currentUser?.username[0].toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {currentUser?.username[0].toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1 flex flex-col pb-3">
                 <div className="flex items-center text-sm gap-1 font-medium text-white">
@@ -164,7 +187,9 @@ export const CreatePostCard = ({ currentUser }: { currentUser: User | null }) =>
           </div>
           <div className="flex justify-between pt-6">
             <div className="flex-1 flex items-center justify-start">
-              <p className="text-sm text-muted-foreground">Anyone can reply or repost</p>
+              <p className="text-sm text-muted-foreground">
+                Anyone can reply or repost
+              </p>
             </div>
             <Button
               variant="ghost"

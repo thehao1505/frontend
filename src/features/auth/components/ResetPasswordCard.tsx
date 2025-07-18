@@ -2,7 +2,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
@@ -86,7 +92,12 @@ export const ResetPasswordCard = () => {
               type="password"
               required
             />
-            <Button disabled={isLoading} type="submit" size="lg" className="bg-neutral-950 w-full">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              size="lg"
+              className="bg-neutral-950 w-full"
+            >
               Continue
             </Button>
           </form>

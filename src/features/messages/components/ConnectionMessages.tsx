@@ -43,7 +43,11 @@ export const ConnectionMessageCard = () => {
     setMessages((prev) => [...prev, msg]);
   }, []);
 
-  const socketRef = useSocket({ token, currentUserId, onMessage: handleIncomingMessage });
+  const socketRef = useSocket({
+    token,
+    currentUserId,
+    onMessage: handleIncomingMessage,
+  });
 
   useEffect(() => {
     setCurrentUserId(currentUser?._id || null);
@@ -139,7 +143,8 @@ export const ConnectionMessageCard = () => {
     const checkScrollbar = () => {
       if (containerRef.current) {
         const element = containerRef.current;
-        const hasVerticalScrollbar = element.scrollHeight > element.clientHeight;
+        const hasVerticalScrollbar =
+          element.scrollHeight > element.clientHeight;
         setHasScrollbar(hasVerticalScrollbar);
       }
     };
@@ -153,7 +158,11 @@ export const ConnectionMessageCard = () => {
 
   return (
     <>
-      <Navbar title={user?.username || "Messages"} showOptionsButton={true} showBackButton={true} />
+      <Navbar
+        title={user?.username || "Messages"}
+        showOptionsButton={true}
+        showBackButton={true}
+      />
       <div className="bg-neutral-900 border-[1px] border-neutral-800 h-[calc(100vh-60px)] w-full rounded-t-3xl">
         <div className="flex flex-col h-full">
           <div
@@ -162,18 +171,26 @@ export const ConnectionMessageCard = () => {
           >
             <div ref={topObserverRef} />
             {isLoadingMore && (
-              <p className="text-center text-neutral-400 text-sm">Loading more...</p>
+              <p className="text-center text-neutral-400 text-sm">
+                Loading more...
+              </p>
             )}
             {messages.map((msg, idx) => (
               <div
                 key={idx}
                 className={`flex flex-row gap-x-2 ${
-                  msg.sender._id === currentUserId ? "justify-end" : "justify-start"
+                  msg.sender._id === currentUserId
+                    ? "justify-end"
+                    : "justify-start"
                 }`}
               >
                 {msg.sender._id !== currentUserId ? (
                   <Avatar className="w-10 h-10 rounded-full overflow-hidden">
-                    <AvatarImage src={msg.sender.avatar} alt="" className="object-cover" />
+                    <AvatarImage
+                      src={msg.sender.avatar}
+                      alt=""
+                      className="object-cover"
+                    />
                   </Avatar>
                 ) : (
                   <></>

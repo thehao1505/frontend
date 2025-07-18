@@ -75,15 +75,19 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
   }, [hasMore, isLoading]);
 
   return (
-    <div
-      className="flex-1 custom-messages-scroll-overlay"
-    >
+    <div className="flex-1 custom-messages-scroll-overlay">
       {posts.map((post, index) => (
-        <PostCard key={`${post._id}-${index}`} post={post} currentUser={currentUser?._id || null} />
+        <PostCard
+          key={`${post._id}-${index}`}
+          post={post}
+          currentUser={currentUser?._id || null}
+        />
       ))}
       {hasMore && (
         <div ref={loader}>
-          <span className="text-sm text-neutral-800 animate-pulse">Loading...</span>
+          <span className="text-sm text-neutral-800 animate-pulse">
+            Loading...
+          </span>
         </div>
       )}
     </div>

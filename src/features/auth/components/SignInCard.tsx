@@ -3,7 +3,13 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardTitle, CardHeader, CardContent, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { TriangleAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,7 +44,10 @@ export const SignInCard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (signUpData.password === signUpData.passwordConfirm && signUpData.password !== "") {
+    if (
+      signUpData.password === signUpData.passwordConfirm &&
+      signUpData.password !== ""
+    ) {
       setIsMatched(true);
     } else {
       setIsMatched(false);
@@ -51,7 +60,10 @@ export const SignInCard = () => {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post(`${config.url}/api/v1/auth/register`, signUpData);
+      const response = await axiosInstance.post(
+        `${config.url}/api/v1/auth/register`,
+        signUpData
+      );
       console.log(response);
 
       if (response.status === 201) {
@@ -76,7 +88,9 @@ export const SignInCard = () => {
       <Card className="w-full h-full p-8">
         <CardHeader className="px-0 pt-0">
           <CardTitle>Create an Account</CardTitle>
-          <CardDescription>Use your email or another service to continue</CardDescription>
+          <CardDescription>
+            Use your email or another service to continue
+          </CardDescription>
         </CardHeader>
         {!!error && (
           <div
@@ -92,7 +106,9 @@ export const SignInCard = () => {
             <Input
               disabled={isLoading}
               value={signUpData.username}
-              onChange={(e) => setSignUpData({ ...signUpData, username: e.target.value })}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, username: e.target.value })
+              }
               placeholder="Username"
               type="text"
               required
@@ -100,7 +116,9 @@ export const SignInCard = () => {
             <Input
               disabled={isLoading}
               value={signUpData.firstName}
-              onChange={(e) => setSignUpData({ ...signUpData, firstName: e.target.value })}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, firstName: e.target.value })
+              }
               placeholder="First Name"
               type="text"
               required
@@ -108,7 +126,9 @@ export const SignInCard = () => {
             <Input
               disabled={isLoading}
               value={signUpData.lastName}
-              onChange={(e) => setSignUpData({ ...signUpData, lastName: e.target.value })}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, lastName: e.target.value })
+              }
               placeholder="Last Name"
               type="text"
               required
@@ -116,7 +136,9 @@ export const SignInCard = () => {
             <Input
               disabled={isLoading}
               value={signUpData.email}
-              onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, email: e.target.value })
+              }
               placeholder="Email"
               type="email"
               required
@@ -124,7 +146,9 @@ export const SignInCard = () => {
             <Input
               disabled={isLoading}
               value={signUpData.password}
-              onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, password: e.target.value })
+              }
               placeholder="Password"
               type="password"
               required
@@ -144,7 +168,12 @@ export const SignInCard = () => {
               type="password"
               required
             />
-            <Button disabled={isLoading || !isMatched} type="submit" size="lg" className="w-full">
+            <Button
+              disabled={isLoading || !isMatched}
+              type="submit"
+              size="lg"
+              className="w-full"
+            >
               Continue
             </Button>
           </form>

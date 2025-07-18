@@ -14,7 +14,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Heart, MoreVertical, Pencil, Trash2, TriangleAlert } from "lucide-react";
+import {
+  Heart,
+  MoreVertical,
+  Pencil,
+  Trash2,
+  TriangleAlert,
+} from "lucide-react";
 import ShareButton from "./ShareButton";
 import ThreadReplyButton from "./ThreadReplyButton";
 import { HorizontalImageGallery } from "./HorizontalImageGallery";
@@ -45,10 +51,14 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
     startTransition(async () => {
       try {
         if (liked) {
-          await axiosInstance.post(`${config.url}/api/v1/posts/${post._id}/unLike`);
+          await axiosInstance.post(
+            `${config.url}/api/v1/posts/${post._id}/unLike`
+          );
           setLikeCount((prev) => prev - 1);
         } else {
-          await axiosInstance.post(`${config.url}/api/v1/posts/${post._id}/like`);
+          await axiosInstance.post(
+            `${config.url}/api/v1/posts/${post._id}/like`
+          );
           setLikeCount((prev) => prev + 1);
         }
         setLiked(!liked);
@@ -60,7 +70,9 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`${config.url}/api/v1/posts/${post._id}/soft-delete`);
+      await axiosInstance.delete(
+        `${config.url}/api/v1/posts/${post._id}/soft-delete`
+      );
       window.location.reload();
     } catch (err) {
       console.error("Delete post failed:", err);
@@ -107,12 +119,17 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
             alt={post.author.username}
             className="object-cover"
           />
-          <AvatarFallback>{post.author.username[0].toUpperCase()}</AvatarFallback>
+          <AvatarFallback>
+            {post.author.username[0].toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1 flex flex-col">
           <div className="flex items-center justify-between">
             <div className="flex items-center text-sm gap-1 font-medium text-white">
-              <span onClick={() => handleAuthorClick()} className="cursor-pointer hover:underline">
+              <span
+                onClick={() => handleAuthorClick()}
+                className="cursor-pointer hover:underline"
+              >
                 {post.author.username}
               </span>
               <span className="text-xs text-muted-foreground">• </span>
@@ -135,7 +152,10 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
                     <Pencil className="w-4 h-4 mr-2" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleDelete} className="text-red-500">
+                  <DropdownMenuItem
+                    onClick={handleDelete}
+                    className="text-red-500"
+                  >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Delete
                   </DropdownMenuItem>
@@ -179,7 +199,9 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
                 </div>
               </>
             ) : (
-              <p className="text-sm text-white whitespace-pre-line">{editedContent}</p>
+              <p className="text-sm text-white whitespace-pre-line">
+                {editedContent}
+              </p>
             )}
           </div>
 
@@ -191,7 +213,9 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
               disabled={isPending || !currentUser}
               className={cn(
                 "flex items-center gap-1 transition-colors duration-150",
-                liked ? "text-red-500 hover:fill-red-400" : "hover:text-neutral-400"
+                liked
+                  ? "text-red-500 hover:fill-red-400"
+                  : "hover:text-neutral-400"
               )}
             >
               <Heart className={cn("w-4 h-4", liked && "fill-red-500")} />
