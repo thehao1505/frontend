@@ -28,31 +28,27 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
         setHasMore(false);
       } else {
         if (pageNum === 1) {
-          // Nếu là page đầu tiên, thay thế toàn bộ posts
           setPosts(response.data);
         } else {
-          // Nếu là page tiếp theo, append vào posts hiện tại
           setPosts((prev) => [...prev, ...response.data]);
         }
       }
     } catch (error) {
       console.error("Error fetching posts: ", error);
     } finally {
-      setIsLoading(false); // Đã sửa: từ true thành false
+      setIsLoading(false);
     }
   };
 
-  // Fetch posts khi component mount hoặc currentUser thay đổi
   useEffect(() => {
     if (currentUser?._id) {
-      setPosts([]); // Reset posts
-      setPage(1); // Reset page
-      setHasMore(true); // Reset hasMore
+      setPosts([]);
+      setPage(1);
+      setHasMore(true);
       fetchPosts(1, 2);
     }
   }, [currentUser?._id]);
 
-  // Fetch posts khi page thay đổi (không phải page 1)
   useEffect(() => {
     if (page > 1) {
       fetchPosts(page, 2);
