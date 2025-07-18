@@ -12,6 +12,7 @@ import { notFound, useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import EditProfileCard from "./EditProfileCard";
 import { CreatePostCard } from "@/features/common/components/CreatePostCard";
+import { UserPost } from "./UserPost";
 
 export const ProfileCard = () => {
   const params = useParams();
@@ -89,102 +90,106 @@ export const ProfileCard = () => {
       />
       <div className="bg-neutral-900 border-[1px] border-neutral-800 h-[calc(100vh-60px)] w-full rounded-t-3xl">
         <div className="flex flex-col h-full">
-          <div className="flex flex-col items-center w-full pt-5 px-6 pb-3">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-col ">
-                <h1 className="text-2xl font-bold text-white">{user?.fullName}</h1>
-                <p className="text-sm text-white">{user?.username}</p>
-              </div>
-              <Avatar className="w-21 h-21 rounded-full overflow-hidden">
-                <AvatarImage src={user?.avatar} alt={user?.username} className="object-cover" />
-                <AvatarFallback>{user?.username[0].toUpperCase()}</AvatarFallback>
-              </Avatar>
-            </div>
-            {user?.shortDescription && (
-              <p className="text-sm text-white w-full mt-4">{user?.shortDescription}</p>
-            )}
-            <div className="flex items-center justify-between w-full h-9 mt-3">
-              <p className="text-sm text-neutral-400">{followersCounts} followers</p>
-              <div className="flex flex-row gap-x-3">
-                <ChartNoAxesCombined size={24} className="text-white cursor-pointer" />
-                <Instagram size={24} className="text-white cursor-pointer" />
-              </div>
-            </div>
-          </div>
+          <div
+            className="flex-1 custom-messages-scroll-overlay"
+          >
 
-          <div className="flex items-center justify-between gap-x-3 w-full px-6 py-3">
-            {user?._id === currentUser?._id ? (
-              <EditProfileCard currentUser={currentUser} onProfileUpdated={fetchUserProfile} />
-            ) : (
-              <>
-                <Button
-                  variant="ghost"
-                  onClick={toggleFollow}
-                  disabled={isPending}
-                  className={cn(
-                    "font-semibold rounded-lg flex-1 border border-neutral-700",
-                    isFollowed ? "text-white" : "bg-red-800 text-white hover:bg-red-900"
-                  )}
-                >
-                  {isFollowed ? "Following" : "Follow"}
-                </Button>
-                <Button
-                  onClick={handleMessageClick}
-                  variant="ghost"
-                  className="text-white font-semibold rounded-lg flex-1 border border-neutral-700"
-                >
-                  Message
-                </Button>
-              </>
-            )}
-          </div>
+            <div className="flex flex-col items-center w-full pt-5 px-6 pb-3">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex flex-col ">
+                  <h1 className="text-2xl font-bold text-white">{user?.fullName}</h1>
+                  <p className="text-sm text-white">{user?.username}</p>
+                </div>
+                <Avatar className="w-21 h-21 rounded-full overflow-hidden">
+                  <AvatarImage src={user?.avatar} alt={user?.username} className="object-cover" />
+                  <AvatarFallback>{user?.username[0].toUpperCase()}</AvatarFallback>
+                </Avatar>
+              </div>
+              {user?.shortDescription && (
+                <p className="text-sm text-white w-full mt-4">{user?.shortDescription}</p>
+              )}
+              <div className="flex items-center justify-between w-full h-9 mt-3">
+                <p className="text-sm text-neutral-400">{followersCounts} followers</p>
+                <div className="flex flex-row gap-x-3">
+                  <ChartNoAxesCombined size={24} className="text-white cursor-pointer" />
+                  <Instagram size={24} className="text-white cursor-pointer" />
+                </div>
+              </div>
+            </div>
 
-          <div className="flex items-center justify-around w-full h-[49px]">
-            <div
-              className={`flex items-center justify-center h-full w-full cursor-pointer border-b-[1px] ${
-                activeTab === "thread" ? "border-white" : "border-neutral-600"
-              }`}
-              onClick={() => setActiveTab("thread")}
-            >
-              <p
-                className={`text-sm font-semibold ${
-                  activeTab === "thread" ? "text-white" : "text-neutral-600"
+            <div className="flex items-center justify-between gap-x-3 w-full px-6 py-3">
+              {user?._id === currentUser?._id ? (
+                <EditProfileCard currentUser={currentUser} onProfileUpdated={fetchUserProfile} />
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={toggleFollow}
+                    disabled={isPending}
+                    className={cn(
+                      "font-semibold rounded-lg flex-1 border border-neutral-700",
+                      isFollowed ? "text-white" : "bg-red-800 text-white hover:bg-red-900"
+                    )}
+                  >
+                    {isFollowed ? "Following" : "Follow"}
+                  </Button>
+                  <Button
+                    onClick={handleMessageClick}
+                    variant="ghost"
+                    className="text-white font-semibold rounded-lg flex-1 border border-neutral-700"
+                  >
+                    Message
+                  </Button>
+                </>
+              )}
+            </div>
+
+            <div className="flex items-center justify-around w-full h-[49px]">
+              <div
+                className={`flex items-center justify-center h-full w-full cursor-pointer border-b-[1px] ${
+                  activeTab === "thread" ? "border-white" : "border-neutral-600"
                 }`}
+                onClick={() => setActiveTab("thread")}
               >
-                Thread
-              </p>
-            </div>
+                <p
+                  className={`text-sm font-semibold ${
+                    activeTab === "thread" ? "text-white" : "text-neutral-600"
+                  }`}
+                >
+                  Thread
+                </p>
+              </div>
 
-            <div
-              className={`flex items-center justify-center h-full w-full cursor-pointer border-b-[1px] ${
-                activeTab === "replies" ? "border-white" : "border-neutral-600"
-              }`}
-              onClick={() => setActiveTab("replies")}
-            >
-              <p
-                className={`text-sm font-semibold ${
-                  activeTab === "replies" ? "text-white" : "text-neutral-600"
+              <div
+                className={`flex items-center justify-center h-full w-full cursor-pointer border-b-[1px] ${
+                  activeTab === "replies" ? "border-white" : "border-neutral-600"
                 }`}
+                onClick={() => setActiveTab("replies")}
               >
-                Replies
-              </p>
+                <p
+                  className={`text-sm font-semibold ${
+                    activeTab === "replies" ? "text-white" : "text-neutral-600"
+                  }`}
+                >
+                  Replies
+                </p>
+              </div>
             </div>
-          </div>
 
-          {user?._id === currentUser?._id && <CreatePostCard currentUser={user} />}
+            {user?._id === currentUser?._id && <CreatePostCard currentUser={user} />}
 
-          <div className="mt-4">
-            {activeTab === "thread" && (
-              <div>
-                <p className="text-white">Nội dung của Thread...</p>
-              </div>
-            )}
+            <div className="mt-4">
+              
+              {activeTab === "thread" && (
+                <UserPost user={user}/>
+              )}
 
-            {activeTab === "replies" && (
-              <div>
-                <p className="text-white">Nội dung của Replies...</p>
-              </div>
-            )}
+              {activeTab === "replies" && (
+                <div>
+                  <p className="text-white">Nội dung của Replies...</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
