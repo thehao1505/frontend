@@ -45,13 +45,13 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
       setPosts([]);
       setPage(1);
       setHasMore(true);
-      fetchPosts(1, 2);
+      fetchPosts(1, 10);
     }
   }, [currentUser?._id]);
 
   useEffect(() => {
     if (page > 1) {
-      fetchPosts(page, 2);
+      fetchPosts(page, 10);
     }
   }, [page]);
 

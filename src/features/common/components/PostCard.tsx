@@ -205,7 +205,12 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
             )}
           </div>
 
-          <HorizontalImageGallery images={post.images} />
+          <HorizontalImageGallery
+            images={post.images}
+            _id={post._id}
+            username={post.author.username}
+            isPostDetailPage={false}
+          />
 
           <div className="flex items-center gap-6 text-muted-foreground text-sm pt-2">
             <button

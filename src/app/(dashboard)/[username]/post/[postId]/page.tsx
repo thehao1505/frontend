@@ -1,4 +1,6 @@
+import { PostDetail } from "@/features/common/components/PostDetail";
+
 const PostDetailPage = () => {
-  return <></>;
+  return <PostDetail />;
 };
 export default PostDetailPage;

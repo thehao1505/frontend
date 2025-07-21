@@ -2,7 +2,17 @@
 
 import React, { useRef, useState } from "react";
 
-export const HorizontalImageGallery = ({ images }: { images: string[] }) => {
+export const HorizontalImageGallery = ({
+  images,
+  _id,
+  username,
+  isPostDetailPage,
+}: {
+  images: string[];
+  _id: string;
+  username: string;
+  isPostDetailPage: boolean;
+}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -40,12 +50,19 @@ export const HorizontalImageGallery = ({ images }: { images: string[] }) => {
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
+  const redirectLink = isPostDetailPage ? "" : `/@${username}/post/${_id}`;
+  const margin = isPostDetailPage
+    ? "mr-[-24px] ml-[-24px]"
+    : "mr-[-24px] ml-[-72px]";
+
+  const width = isPostDetailPage ? "w-[16px]" : "w-[64px]";
+
   return (
     <>
       {images.length > 0 && (
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto w-full py-2 space-x-2 custom-messages-scroll-overlay cursor-grab active:cursor-grabbing select-none"
+          className={`flex overflow-x-auto py-2 ${margin} space-x-2 custom-messages-scroll-overlay cursor-grab active:cursor-grabbing select-none`}
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUpOrLeave}
@@ -53,6 +70,7 @@ export const HorizontalImageGallery = ({ images }: { images: string[] }) => {
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
         >
+          <a className={`${width} shrink-0`} href={redirectLink}></a>
           {images.map((image, index) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -62,6 +80,7 @@ export const HorizontalImageGallery = ({ images }: { images: string[] }) => {
               className="rounded-md object-cover max-h-60 flex-1 basis-[48%] pointer-events-none"
             />
           ))}
+          <a className="w-[16px] shrink-0" href={redirectLink}></a>
         </div>
       )}
     </>
