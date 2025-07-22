@@ -98,7 +98,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
   };
 
   const handlePostClick = () => {
-    router.push(`/${post.author.username}/post/${post._id}`);
+    router.push(`/@${post.author.username}/post/${post._id}`);
   };
 
   const handleAuthorClick = () => {
@@ -200,7 +200,12 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
               </>
             ) : (
               <p className="text-sm text-white whitespace-pre-line">
-                {editedContent}
+                <span
+                  onClick={() => handleAuthorClick()}
+                  className="cursor-pointer"
+                >
+                  {editedContent}
+                </span>
               </p>
             )}
           </div>
