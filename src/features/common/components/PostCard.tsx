@@ -202,9 +202,9 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
               <p className="text-sm text-white whitespace-pre-line">
                 <span
                   onClick={() => handleAuthorClick()}
-                  className="cursor-pointer"
+                  className="cursor-pointer inline-block min-h-[1.25rem]"
                 >
-                  {editedContent}
+                  {editedContent ? editedContent : "\u200B"}
                 </span>
               </p>
             )}

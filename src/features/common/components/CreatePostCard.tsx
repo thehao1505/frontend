@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import { HorizontalImageGallery } from "./HorizontalImageGallery";
 
 export const CreatePostCard = ({
   currentUser,
@@ -32,6 +33,7 @@ export const CreatePostCard = ({
   useEffect(() => {
     if (!showPopup) {
       setContent("");
+      setImages([]);
     }
   }, [showPopup]);
 
@@ -150,19 +152,10 @@ export const CreatePostCard = ({
                   className="w-full bg-transparent border-none text-[15px] text-white focus:outline-none resize-none leading-snug placeholder:text-neutral-500 custom-messages-scroll-overlay"
                 />
 
-                {images.length > 0 && (
-                  <div className="flex flex-wrap gap-2 py-2">
-                    {images.map((image, index) => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`Post image ${index + 1}`}
-                        className="rounded-md object-cover max-h-60 flex-1 basis-[48%]"
-                      />
-                    ))}
-                  </div>
-                )}
+                <HorizontalImageGallery
+                  images={images}
+                  isPostDetailPage={true}
+                />
 
                 <div className="flex flex-row items-center ml-[-8px]">
                   <Images

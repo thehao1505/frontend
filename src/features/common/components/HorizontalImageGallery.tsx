@@ -4,14 +4,14 @@ import React, { useRef, useState } from "react";
 
 export const HorizontalImageGallery = ({
   images,
+  isPostDetailPage,
   _id,
   username,
-  isPostDetailPage,
 }: {
   images: string[];
-  _id: string;
-  username: string;
   isPostDetailPage: boolean;
+  _id?: string;
+  username?: string;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
