@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { config } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { Notification } from "@/features/types";
+import { config } from "@/lib/utils";
 
-interface UseSocketProps {
+interface UseNotificationSocketProps {
   token: string;
   currentUserId: string | null;
-  onMessage?: (message: any) => void;
+  onNotification?: (notification: Notification) => void;
 }
 
-export const useSocket = ({
+export function useNotificationSocket({
   token,
   currentUserId,
-  onMessage,
-}: UseSocketProps) => {
+  onNotification,
+}: UseNotificationSocketProps) {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -31,17 +31,14 @@ export const useSocket = ({
       console.log("🔴 Disconnected from WebSocket server");
     });
 
-    socket.on("newMessage", (message) => {
-      console.log("📩 New message received:", message);
-      onMessage?.(message);
+    socket.on("new-notification", (notification: Notification) => {
+      onNotification?.(notification);
     });
-
-    socketRef.current = socket;
 
     return () => {
       socket.disconnect();
     };
-  }, [token, currentUserId, onMessage]);
+  }, [token, currentUserId, onNotification]);
 
   return socketRef;
-};
+}
