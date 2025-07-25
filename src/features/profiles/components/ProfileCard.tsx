@@ -212,7 +212,7 @@ export const ProfileCard = () => {
               <CreatePostCard currentUser={user} />
             )}
 
-            <div className="mt-4">
+            <div>
               {activeTab === "thread" && <UserPost user={user} />}
 
               {activeTab === "replies" && (

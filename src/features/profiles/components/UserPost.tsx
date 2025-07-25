@@ -79,7 +79,7 @@ export const UserPost = ({ user }: { user: User | null }) => {
         <PostCard
           key={`${post._id}-${index}`}
           post={post}
-          currentUser={user?._id || null}
+          currentUser={user || null}
         />
       ))}
       {hasMore && (

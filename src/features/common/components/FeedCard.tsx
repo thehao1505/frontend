@@ -80,7 +80,7 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
         <PostCard
           key={`${post._id}-${index}`}
           post={post}
-          currentUser={currentUser?._id || null}
+          currentUser={currentUser || null}
         />
       ))}
       {hasMore && (

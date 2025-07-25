@@ -1,11 +1,11 @@
 "use client";
 
-import { Post } from "@/features/types";
+import { Post, User } from "@/features/types";
 import axiosInstance from "@/lib/axios";
 import { cn, config } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -15,18 +15,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Heart,
+  Images,
+  MapPin,
+  Paperclip,
+  Text,
+  Smile,
+  TriangleAlert,
   MoreVertical,
   Pencil,
   Trash2,
-  TriangleAlert,
+  Heart,
 } from "lucide-react";
 import ShareButton from "./ShareButton";
 import ThreadReplyButton from "./ThreadReplyButton";
 import { HorizontalImageGallery } from "./HorizontalImageGallery";
+import Modal from "@/components/modal";
+import TextareaAutosize from "react-textarea-autosize";
+import { Button } from "@/components/ui/button";
 
 interface PostCardProp {
-  currentUser: string | null;
+  currentUser: User | null;
   post: Post;
 }
 
@@ -34,16 +42,46 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
   const [editedContent, setEditedContent] = useState(post.content);
   const [likeCount, setLikeCount] = useState(post.likes.length);
   const [isEditing, setIsEditing] = useState(false);
-  const [liked, setLiked] = useState(post.likes.includes(currentUser || ""));
-  const [error, setError] = useState(false);
+  const [liked, setLiked] = useState(
+    post.likes.includes(currentUser?._id || "")
+  );
+  const [images, setImages] = useState<string[]>(post.images);
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setLiked(post.likes.includes(currentUser || ""));
+    setLiked(post.likes.includes(currentUser?._id || ""));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsLoading(true);
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    const formData = new FormData();
+    files.forEach((file) => formData.append("files", file));
+
+    try {
+      const res = await axiosInstance.post(
+        `${config.url}/api/v1/upload/multiple`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      setImages((prev) => [...prev, ...res.data]);
+    } catch (err) {
+      console.error("Upload error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleLike = () => {
     if (!currentUser) return;
@@ -79,21 +117,24 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
     }
   };
 
-  const handleEdit = async () => {
+  const handleSubmit = async () => {
     try {
-      if (editedContent.length === 0 && post.images.length === 0) {
-        setError(true);
-        return;
+      setIsLoading(true);
+      if (editedContent.length === 0 && images.length === 0) {
+        setError("Please enter some content or add an image");
       } else {
-        await axiosInstance.patch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/posts/${post._id}`,
-          { content: editedContent }
-        );
+        await axiosInstance.patch(`${config.url}/api/v1/posts/${post._id}`, {
+          content: editedContent,
+          images,
+        });
+
         setIsEditing(false);
         setEditedContent(editedContent);
       }
     } catch (err) {
-      console.error("Edit post failed:", err);
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,7 +183,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
                 })}
               </span>
             </div>
-            {currentUser === post.author._id && (
+            {currentUser?._id === post.author._id && (
               <DropdownMenu>
                 <DropdownMenuTrigger className="text-muted-foreground hover:text-white">
                   <MoreVertical className="w-4 h-4" />
@@ -165,39 +206,86 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
           </div>
           <div className="flex flex-col gap-1">
             {isEditing ? (
-              <>
-                {!!error && (
-                  <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
-                    <TriangleAlert className="size-4" />
-                    <p>Please don&apos;t leave the content empty</p>
-                  </div>
-                )}
-                <div className="flex flex-col gap-2">
-                  <textarea
-                    value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
-                    className="w-full bg-neutral-800 text-white p-2 rounded border border-neutral-700"
-                    rows={3}
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleEdit}
-                      className="bg-primary text-white px-4 py-1 rounded hover:bg-primary/90"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsEditing(false);
-                        setEditedContent(post.content);
-                      }}
-                      className="bg-neutral-800 text-white px-4 py-1 rounded hover:bg-neutral-700"
-                    >
-                      Cancel
-                    </button>
+              <Modal
+                title="New Thread"
+                isOpen={isEditing}
+                onClose={() => setIsEditing(false)}
+              >
+                <div className="text-sm text-neutral-200">
+                  {!!error && (
+                    <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+                      <TriangleAlert className="size-4" />
+                      <p>Please enter some content or add an image</p>
+                    </div>
+                  )}
+                  <div className="flex flex-row items-start gap-3 w-full border-b-[1px] border-neutral-800">
+                    <Avatar className="w-9 h-9 rounded-full overflow-hidden">
+                      <AvatarImage
+                        src={currentUser?.avatar}
+                        alt={currentUser?.username}
+                        className="object-cover"
+                      />
+                      <AvatarFallback>
+                        {currentUser?.username[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 flex flex-col pb-3">
+                      <div className="flex items-center text-sm gap-1 font-medium text-white">
+                        <span className="text-white text-[15px] font-semibold">
+                          {currentUser?.username}
+                        </span>
+                      </div>
+                      <TextareaAutosize
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                        placeholder="What's on your mind?"
+                        minRows={1}
+                        maxRows={20}
+                        className="w-full bg-transparent border-none text-[15px] text-white focus:outline-none resize-none leading-snug placeholder:text-neutral-500 custom-messages-scroll-overlay"
+                      />
+
+                      <HorizontalImageGallery
+                        images={post.images}
+                        isPostDetailPage={true}
+                      />
+
+                      <div className="flex flex-row items-center ml-[-8px]">
+                        <Images
+                          onClick={() => imageInputRef.current?.click()}
+                          className="w-5 h-5 text-muted-foreground m-2 cursor-pointer"
+                        />
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          ref={imageInputRef}
+                          onChange={handleImageChange}
+                          className="hidden"
+                        />
+                        <Smile className="w-5 h-5 text-muted-foreground m-2" />
+                        <MapPin className="w-5 h-5 text-muted-foreground m-2" />
+                        <Text className="w-5 h-5 text-muted-foreground m-2" />
+                        <Paperclip className="w-5 h-5 text-muted-foreground m-2" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </>
+                <div className="flex justify-between pt-6">
+                  <div className="flex-1 flex items-center justify-start">
+                    <p className="text-sm text-muted-foreground">
+                      Anyone can reply or repost
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    disabled={isLoading}
+                    className="text-white font-semibold rounded-xl border border-neutral-800"
+                    onClick={() => handleSubmit()}
+                  >
+                    Update
+                  </Button>
+                </div>
+              </Modal>
             ) : (
               <p className="text-sm text-white whitespace-pre-line">
                 <span
@@ -231,7 +319,10 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
               <Heart className={cn("w-4 h-4", liked && "fill-red-500")} />
               {likeCount}
             </button>
-            <ThreadReplyButton postId={post._id} currentUser={currentUser} />
+            <ThreadReplyButton
+              postId={post._id}
+              currentUser={currentUser?._id || null}
+            />
             <ShareButton />
           </div>
         </div>
