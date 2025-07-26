@@ -13,14 +13,14 @@ export const UserPost = ({ user }: { user: User | null }) => {
 
   const loader = useRef<HTMLDivElement | null>(null);
 
-  const fetchPosts = async (pageNum: number, limit: number) => {
+  const fetchPosts = async (pageNum: number) => {
     if (!hasMore || !user?._id || isLoading) return;
 
     setIsLoading(true);
 
     try {
       const response = await axiosInstance.get(
-        `${config.url}/api/v1/posts?page=${pageNum}&limit=${limit}&author=${user._id}`
+        `${config.url}/api/v1/posts?page=${pageNum}&limit=10&author=${user._id}`
       );
 
       if (response.data.length === 0) {
@@ -44,13 +44,13 @@ export const UserPost = ({ user }: { user: User | null }) => {
       setPosts([]);
       setPage(1);
       setHasMore(true);
-      fetchPosts(1, 2);
+      fetchPosts(1);
     }
   }, [user?._id]);
 
   useEffect(() => {
     if (page > 1) {
-      fetchPosts(page, 2);
+      fetchPosts(page);
     }
   }, [page]);
 
