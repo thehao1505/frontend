@@ -69,7 +69,7 @@ export const CreatePostCard = ({
         setError("Please enter some content or add an image");
       } else {
         await axiosInstance.post(`${config.url}/api/v1/posts`, {
-          content,
+          content: content.trim(),
           images,
         });
 

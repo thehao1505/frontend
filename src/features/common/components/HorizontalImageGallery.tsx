@@ -62,7 +62,7 @@ export const HorizontalImageGallery = ({
       {images.length > 0 && (
         <div
           ref={scrollRef}
-          className={`flex overflow-x-auto py-2 ${margin} space-x-2 custom-messages-scroll-overlay cursor-grab active:cursor-grabbing select-none`}
+          className={`flex overflow-x-auto pt-2 pb-1 ${margin} space-x-2 custom-messages-scroll-overlay cursor-grab active:cursor-grabbing select-none`}
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUpOrLeave}

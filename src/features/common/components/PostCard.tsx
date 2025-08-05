@@ -40,10 +40,10 @@ interface PostCardProp {
 
 export const PostCard = ({ currentUser, post }: PostCardProp) => {
   const [editedContent, setEditedContent] = useState(post.content);
-  const [likeCount, setLikeCount] = useState(post.likes.length);
+  const [likeCount, setLikeCount] = useState(post?.likes?.length || 0);
   const [isEditing, setIsEditing] = useState(false);
   const [liked, setLiked] = useState(
-    post.likes.includes(currentUser?._id || "")
+    post?.likes?.includes(currentUser?._id || "")
   );
   const [images, setImages] = useState<string[]>(post.images);
   const [error, setError] = useState<string>();
@@ -130,6 +130,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
 
         setIsEditing(false);
         setEditedContent(editedContent);
+        window.location.reload();
       }
     } catch (err) {
       console.error(err);
@@ -246,7 +247,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
 
                       <HorizontalImageGallery
                         images={post.images}
-                        isPostDetailPage={true}
+                        isPostDetailPage={false}
                       />
 
                       <div className="flex flex-row items-center ml-[-8px]">
@@ -289,7 +290,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
             ) : (
               <p className="text-sm text-white whitespace-pre-line">
                 <span
-                  onClick={() => handleAuthorClick()}
+                  onClick={() => handlePostClick()}
                   className="cursor-pointer inline-block min-h-[1.25rem]"
                 >
                   {editedContent ? editedContent : "\u200B"}
@@ -319,10 +320,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
               <Heart className={cn("w-4 h-4", liked && "fill-red-500")} />
               {likeCount}
             </button>
-            <ThreadReplyButton
-              postId={post._id}
-              currentUser={currentUser?._id || null}
-            />
+            <ThreadReplyButton post={post} currentUser={currentUser} />
             <ShareButton />
           </div>
         </div>

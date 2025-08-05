@@ -12,6 +12,7 @@ export interface Post {
   likes: string[];
   createdAt: string;
   updatedAt: string;
+  parentId: string;
 }
 
 export interface User {

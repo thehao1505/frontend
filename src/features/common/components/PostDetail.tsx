@@ -2,7 +2,7 @@
 
 import { notFound, useParams, useRouter } from "next/navigation";
 import useUser from "../hooks/useUser";
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import axiosInstance from "@/lib/axios";
 import { Post } from "@/features/types";
 import { cn, config } from "@/lib/utils";
@@ -27,27 +27,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PostCard } from "./PostCard";
 
 export const PostDetail = () => {
   const params = useParams();
-  const router = useRouter();
   const username = decodeURIComponent(params.username as string);
   const { currentUser } = useCurrentUser();
   const [isPending, startTransition] = useTransition();
 
-  const { user, error } = useUser(
-    username.startsWith("@") ? username.slice(1) : ""
-  );
+  const { error } = useUser(username.startsWith("@") ? username.slice(1) : "");
 
+  const [page, setPage] = useState<number>(1);
+  const [likeCount, setLikeCount] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [postDetail, setPostDetail] = useState<Post>();
+  const [formattedDate, setFormattedDate] = useState("");
+  const [replyPosts, setReplyPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [editedContent, setEditedContent] = useState(postDetail?.content);
   const [liked, setLiked] = useState(
     postDetail?.likes.includes(currentUser?._id || "")
   );
-  const [likeCount, setLikeCount] = useState(0);
-  const [formattedDate, setFormattedDate] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(postDetail?.content);
 
   useEffect(() => {
     if (postDetail?.createdAt) {
@@ -58,6 +58,10 @@ export const PostDetail = () => {
       );
     }
   }, [postDetail?.createdAt]);
+
+  const updatePost = (rPost: Post) => {
+    setReplyPosts((prev) => [rPost, ...prev]);
+  };
 
   const toggleLike = () => {
     if (!currentUser) return;
@@ -92,6 +96,7 @@ export const PostDetail = () => {
       setPostDetail(res.data);
       setLiked(res.data.likes.includes(currentUser?._id || ""));
       setLikeCount(res.data.likes.length);
+      setEditedContent(postDetail?.content);
     } catch (err) {
       console.log(err);
     } finally {
@@ -101,12 +106,21 @@ export const PostDetail = () => {
 
   useEffect(() => {
     fetchPostDetail();
-  }, [params.postId, currentUser, isLoading]);
+  }, [params.postId, currentUser]);
 
   useEffect(() => {
     setLiked(postDetail?.likes.includes(currentUser?._id || ""));
     setEditedContent(postDetail?.content);
-  }, [currentUser?._id, postDetail?.likes, postDetail?.content]);
+  }, [
+    currentUser?._id,
+    postDetail?.likes,
+    postDetail?.content,
+    postDetail?._id,
+  ]);
+
+  useEffect(() => {
+    fetchReplyPosts(1);
+  }, [postDetail?._id]);
 
   const handleDelete = async () => {
     try {
@@ -125,7 +139,7 @@ export const PostDetail = () => {
         return;
       } else {
         await axiosInstance.patch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/posts/${postDetail?._id}`,
+          `${config.url}/api/v1/posts/${postDetail?._id}`,
           { content: editedContent }
         );
         setIsEditing(false);
@@ -136,6 +150,24 @@ export const PostDetail = () => {
     }
   };
 
+  const fetchReplyPosts = async (pageNum: number) => {
+    try {
+      const res = await axiosInstance.get(
+        `${config.url}/api/v1/posts?page=${pageNum}&limit=10&parentId=${postDetail?._id}`
+      );
+      if (res.data.length !== 0) {
+        setReplyPosts((prevPosts) => [...prevPosts, ...res.data]);
+        setPage((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLoadMoreReplyPost = async () => {
+    fetchReplyPosts(page);
+  };
+
   if (!username.startsWith("@") || error) {
     return notFound();
   }
@@ -144,8 +176,8 @@ export const PostDetail = () => {
     <>
       <Navbar title="Thread" showOptionsButton={true} showBackButton={true} />
       <div className="bg-neutral-900 border-[1px] border-neutral-800 h-[calc(100vh-60px)] w-full rounded-t-3xl">
-        <div className="flex flex-col h-full px-6 pt-6">
-          <div className="flex flex-row gap-3 w-full items-center pb-2">
+        <div className="flex flex-col h-full">
+          <div className="flex flex-row gap-3 w-full items-center pb-2 px-6 pt-6">
             <Avatar className="w-9 h-9 rounded-full overflow-hidden">
               <AvatarImage
                 src={postDetail?.author.avatar}
@@ -183,7 +215,7 @@ export const PostDetail = () => {
               </DropdownMenu>
             )}
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col px-6 border-b-[1px] border-neutral-800">
             <div className="flex flex-col gap-1">
               {isEditing ? (
                 <>
@@ -233,7 +265,7 @@ export const PostDetail = () => {
               isPostDetailPage={true}
             />
 
-            <div className="flex items-center gap-6 text-muted-foreground text-sm py-3 border-b border-neutral-800">
+            <div className="flex items-center gap-6 text-muted-foreground text-sm pt-2 pb-3 border-b border-neutral-800">
               <button
                 onClick={toggleLike}
                 disabled={isPending || !currentUser}
@@ -248,8 +280,9 @@ export const PostDetail = () => {
                 <span>{likeCount}</span>
               </button>
               <ThreadReplyButton
-                postId={postDetail?._id || ""}
-                currentUser={currentUser?._id || ""}
+                post={postDetail || null}
+                currentUser={currentUser}
+                onUpdate={updatePost}
               />
               <ShareButton />
             </div>
@@ -260,6 +293,22 @@ export const PostDetail = () => {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </div>
             </div>
+          </div>
+          <div className="flex-1 custom-messages-scroll-overlay">
+            {replyPosts.length !== 0 &&
+              replyPosts.map((post, index) => (
+                <PostCard
+                  key={`${post._id}-${index}`}
+                  currentUser={currentUser}
+                  post={post}
+                />
+              ))}
+            <button
+              className="text-muted-foreground text-[15px] pl-6 pt-2 pb-4 hover:underline"
+              onClick={handleLoadMoreReplyPost}
+            >
+              See more reply.
+            </button>
           </div>
         </div>
       </div>
