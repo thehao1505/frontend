@@ -6,7 +6,7 @@ services:
     container_name: frontend_service
     restart: always
     env_file:
-      - .env.local
+      - .env.prod
     ports:
       - 12346:3000
     environment:
