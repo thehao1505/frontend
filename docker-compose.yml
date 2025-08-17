@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend_service
+    restart: always
+    env_file:
+      - .env.local
+    ports:
+      - 12346:3000
+    environment:
+      - NODE_ENV=production

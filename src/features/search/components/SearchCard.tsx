@@ -6,7 +6,6 @@ import { Post } from "@/features/types";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const SearchCard = () => {
@@ -83,11 +82,7 @@ export const SearchCard = () => {
           ) : (
             <div className="pt-4">
               {posts.map((post) => (
-                <PostCard
-                  key={post._id}
-                  currentUser={currentUser?._id || ""}
-                  post={post}
-                />
+                <PostCard key={post._id} currentUser={currentUser} post={post} />
               ))}
             </div>
           )}
