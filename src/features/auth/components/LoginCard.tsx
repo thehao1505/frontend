@@ -49,6 +49,8 @@ export const LoginCard = () => {
         payload
       );
 
+      console.log(`${config.url}/api/v1/auth/login`)
+
       if (response.status === 201) {
         const token = response.data.token.accessToken;
         setCookie(null, "token", token, { path: "/" });
