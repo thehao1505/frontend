@@ -11,25 +11,7 @@ export const MessageCard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [connections, setConnections] = useState<User[]>([]);
 
-  const [hasScrollbar, setHasScrollbar] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const checkScrollbar = () => {
-      if (scrollContainerRef.current) {
-        const element = scrollContainerRef.current;
-        const hasVerticalScrollbar =
-          element.scrollHeight > element.clientHeight;
-        setHasScrollbar(hasVerticalScrollbar);
-      }
-    };
-
-    checkScrollbar();
-
-    const timeoutId = setTimeout(checkScrollbar, 100);
-
-    return () => clearTimeout(timeoutId);
-  }, [connections, isLoading]);
 
   const fetchConnection = useCallback(async () => {
     try {

@@ -82,7 +82,11 @@ export const SearchCard = () => {
           ) : (
             <div className="pt-4">
               {posts.map((post) => (
-                <PostCard key={post._id} currentUser={currentUser} post={post} />
+                <PostCard
+                  key={post._id}
+                  currentUser={currentUser}
+                  post={post}
+                />
               ))}
             </div>
           )}

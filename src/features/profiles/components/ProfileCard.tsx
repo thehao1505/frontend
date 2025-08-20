@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import EditProfileCard from "./EditProfileCard";
 import { CreatePostCard } from "@/features/common/components/CreatePostCard";
 import { UserPost } from "./UserPost";
+import { UserReplyPost } from "./UserReplyPost";
 
 export const ProfileCard = () => {
   const params = useParams();
@@ -215,11 +216,7 @@ export const ProfileCard = () => {
             <div>
               {activeTab === "thread" && <UserPost user={user} />}
 
-              {activeTab === "replies" && (
-                <div>
-                  <p className="text-white">Nội dung của Replies...</p>
-                </div>
-              )}
+              {activeTab === "replies" && <UserReplyPost user={user} />}
             </div>
           </div>
         </div>
