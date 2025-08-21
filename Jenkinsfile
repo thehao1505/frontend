@@ -5,7 +5,7 @@ pipeline {
     stage('Prepare .env') {
       steps {
         withCredentials([file(credentialsId: 'env.prod.fe', variable: 'ENV_FILE')]) {
-          sh 'cp $ENV_FILE .env.prod'
+          sh 'cp $ENV_FILE .env'
         }
       }
     }

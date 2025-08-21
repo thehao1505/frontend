@@ -44,6 +44,8 @@ export const LoginCard = () => {
         ? { email: loginData.emailOrUsername, password: loginData.password }
         : { username: loginData.emailOrUsername, password: loginData.password };
 
+      console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+
       console.log(`'${config.url}'/api/v1/auth/login`);
 
       const response = await axiosInstance.post(
