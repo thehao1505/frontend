@@ -77,10 +77,21 @@ export const SearchCard = () => {
                   }
                 }}
               />
+              {content && (
+                <div className="w-full mt-[-16px] pt-6 mx-auto bg-neutral-800 rounded-b-xl shadow-lg z-10">
+                  <div
+                    className="px-4 py-2 mt-[-16px] pt-4 text-sm text-neutral-300 cursor-pointer hover:bg-neutral-700 rounded-xl"
+                    onClick={handleSend}
+                  >
+                    Press Enter to search "
+                    <span className="text-white">{content}</span>"
+                  </div>
+                </div>
+              )}
               {/* // TODO: User suggestion below search bar. */}
             </div>
           ) : (
-            <div className="pt-4">
+            <div className="pt-4 custom-messages-scroll-overlay">
               {posts.map((post) => (
                 <PostCard
                   key={post._id}

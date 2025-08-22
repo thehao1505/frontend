@@ -45,7 +45,7 @@ export const MessageCard = () => {
           </div>
           <div
             ref={scrollContainerRef}
-            className={`flex-1 overflow-y-auto pl-4 py-4 space-y-2 custom-messages-scroll-overlay`}
+            className={`flex-1 custom-messages-scroll-overlay`}
           >
             {isLoading && <p className="text-sm text-white">Loading</p>}
             {connections.length === 0 && !isLoading ? (
