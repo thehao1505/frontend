@@ -27,7 +27,7 @@ export const ResetPasswordCard = () => {
 
   const router = useRouter();
   const params = useParams();
-  const rToken = params.token as string;
+  const rToken = params.rToken as string;
 
   const onResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ export const ResetPasswordCard = () => {
 
     try {
       const response = await axiosInstance.patch(
-        `${config.url}/api/v1/auth/resset-password/${rToken}`,
+        `${config.url}/api/v1/auth/reset-password/${rToken}`,
         {
           password,
           passwordConfirm,
