@@ -28,7 +28,7 @@ export interface User {
 
 export interface Notification {
   _id: string;
-  type: "FOLLOW" | "LIKE";
+  type: "FOLLOW" | "LIKE" | "POST_REPLY";
   message: string;
   senderId: User;
   recipientId: string;

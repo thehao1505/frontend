@@ -72,10 +72,13 @@ export default function ThreadReplyButton({
           onUpdate(res.data);
         }
         setReplyPosts((prev) => prev + 1);
-        setShowPopup(false);
+        setContent("");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
+      setShowPopup(false);
     }
   };
 
