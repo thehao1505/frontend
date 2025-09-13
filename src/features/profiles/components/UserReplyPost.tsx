@@ -21,6 +21,7 @@ export const UserReplyPost = ({ user }: { user: User | null }) => {
 
     try {
       const response = await axiosInstance.get(
+        // TODO: fix this
         `${config.url}/api/v1/posts?page=${pageNum}&limit=10&author=${user._id}`
       );
 

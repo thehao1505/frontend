@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { User } from "@/features/types";
 import axiosInstance from "@/lib/axios";
+import { config } from "@/lib/utils";
 
 const useUser = (username: string) => {
   const [user, setUser] = useState<User | null>(null);
@@ -19,7 +20,7 @@ const useUser = (username: string) => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/username/${username}`
+          `${config.url}/api/v1/users/username/${username}`
         );
 
         setUser(res.data);

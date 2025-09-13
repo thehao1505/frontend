@@ -33,7 +33,6 @@ export interface Notification {
   senderId: User;
   recipientId: string;
   postId?: Post;
-  commentId?: Comment;
   read: boolean;
   createdAt: string;
 }

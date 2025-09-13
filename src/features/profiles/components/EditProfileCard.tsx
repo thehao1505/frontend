@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { User } from "@/features/types";
+import { config } from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -54,7 +55,7 @@ export default function EditProfileCard({
 
     try {
       const res = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/upload/multiple`,
+        `${config.url}/api/v1/upload/multiple`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -72,7 +73,7 @@ export default function EditProfileCard({
   const fetchUserDetails = useCallback(async () => {
     try {
       const res = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${currentUser?._id}`
+        `${config.url}/api/v1/users/${currentUser?._id}`
       );
       setUserDetails(res.data);
       setAvatar(res.data.avatar);
@@ -100,7 +101,7 @@ export default function EditProfileCard({
     setIsSaving(true);
     try {
       await axiosInstance.patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${userDetails._id}`,
+        `${config.url}/api/v1/users/${userDetails._id}`,
         {
           username: userDetails.username,
           firstName: userDetails.firstName,
