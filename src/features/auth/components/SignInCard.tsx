@@ -69,6 +69,8 @@ export const SignInCard = () => {
       if (response.status === 201) {
         const token = response.data.token.accessToken;
         setCookie(null, "token", token, { path: "/" });
+        router.push("/sign-up/interests");
+        return;
       }
 
       if (response.status === 403) {

@@ -17,11 +17,15 @@ export function useNotificationSocket({
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
+    if (!token || !currentUserId) return;
+
     const socket = io(config.url, {
       extraHeaders: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    socketRef.current = socket;
 
     socket.on("connect", () => {
       console.log(`🟢 Connected to WebSocket server`);
@@ -32,11 +36,17 @@ export function useNotificationSocket({
     });
 
     socket.on("new-notification", (notification: Notification) => {
+      console.log("📨 Received notification via WebSocket:", notification);
       onNotification?.(notification);
+    });
+
+    socket.on("error", (error) => {
+      console.error("❌ WebSocket error:", error);
     });
 
     return () => {
       socket.disconnect();
+      socketRef.current = null;
     };
   }, [token, currentUserId, onNotification]);
 

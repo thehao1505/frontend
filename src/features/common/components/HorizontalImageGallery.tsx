@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 
 export const HorizontalImageGallery = ({
@@ -17,6 +18,7 @@ export const HorizontalImageGallery = ({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const router = useRouter();
 
   const onMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
@@ -57,6 +59,11 @@ export const HorizontalImageGallery = ({
 
   const width = isPostDetailPage ? "w-[16px]" : "w-[64px]";
 
+  const handleImageClick = () => {
+    // TODO: Add logic to handle image click
+    router.push(`/@${username}/post/${_id}`);
+  };
+
   return (
     <>
       {images.length > 0 && (
@@ -70,7 +77,7 @@ export const HorizontalImageGallery = ({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
         >
-          <a className={`${width} shrink-0`} href={redirectLink}></a>
+          <a className={`${width} shrink-0`} onClick={handleImageClick}></a>
           {images.map((image, index) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -80,7 +87,7 @@ export const HorizontalImageGallery = ({
               className="rounded-md object-cover max-h-60 flex-1 basis-[48%] pointer-events-none"
             />
           ))}
-          <a className="w-[16px] shrink-0" href={redirectLink}></a>
+          <a className="w-[16px] shrink-0" onClick={handleImageClick}></a>
         </div>
       )}
     </>

@@ -13,6 +13,7 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   parentId: string;
+  likeCount: number;
 }
 
 export interface User {
@@ -35,4 +36,34 @@ export interface Notification {
   postId?: Post;
   read: boolean;
   createdAt: string;
+}
+
+export interface Interaction {
+  _id: string;
+  isDeleted: boolean;
+  userId: string;
+  userActivityType: string;
+  dwellTime: number | null;
+  searchText: string | null;
+  postId: Post | null;
+  isEmbedded: boolean;
+  lastEmbeddedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface InteractionsResponse {
+  total: number;
+  interactions: Interaction[];
+}
+
+export enum UserActivityType {
+  LIKE = "LIKE",
+  SHARE = "SHARE",
+  SEARCH = "SEARCH",
+  POST_VIEW = "POST_VIEW",
+  POST_CLICK = "POST_CLICK",
+  UNLIKE = "UNLIKE",
+  REPLY_POST = "REPLY_POST",
 }

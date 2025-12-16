@@ -43,7 +43,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
   const [likeCount, setLikeCount] = useState(post?.likes?.length || 0);
   const [isEditing, setIsEditing] = useState(false);
   const [liked, setLiked] = useState(
-    post?.likes?.includes(currentUser?._id || "")
+    post?.likes?.includes(currentUser?._id || "") || false
   );
   const [images, setImages] = useState<string[]>(post.images);
   const [error, setError] = useState<string>();
@@ -54,9 +54,12 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
   const imageInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setLiked(post.likes.includes(currentUser?._id || ""));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+    if (currentUser?._id && post?.likes) {
+      setLiked(post.likes.includes(currentUser._id));
+    } else {
+      setLiked(false);
+    }
+  }, [currentUser?._id, post?.likes]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsLoading(true);
@@ -139,7 +142,13 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
     }
   };
 
-  const handlePostClick = () => {
+  const handlePostClick = async () => {
+    try {
+      // Call click API
+      await axiosInstance.post(`${config.url}/api/v1/posts/${post._id}/click`);
+    } catch (err) {
+      console.error("Post click tracking failed:", err);
+    }
     router.push(`/@${post.author.username}/post/${post._id}`);
   };
 
@@ -321,7 +330,7 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
               {likeCount}
             </button>
             <ThreadReplyButton post={post} currentUser={currentUser} />
-            <ShareButton />
+            <ShareButton postId={post._id} />
           </div>
         </div>
       </div>

@@ -21,16 +21,16 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
 
     try {
       const response = await axiosInstance.get(
-        `${config.url}/api/v1/posts?page=${pageNum}&limit=${limit}`
+        `${config.url}/api/v1/recommendations/hybrid?page=${pageNum}&limit=${limit}`
       );
 
-      if (response.data.length === 0) {
+      if (response.data.items.length === 0) {
         setHasMore(false);
       } else {
         if (pageNum === 1) {
-          setPosts(response.data);
+          setPosts(response.data.items);
         } else {
-          setPosts((prev) => [...prev, ...response.data]);
+          setPosts((prev) => [...prev, ...response.data.items]);
         }
       }
     } catch (error) {

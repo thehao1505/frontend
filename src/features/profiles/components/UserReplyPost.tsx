@@ -1,6 +1,7 @@
 "use client";
 
 import { PostCard } from "@/features/common/components/PostCard";
+import useCurrentUser from "@/features/common/hooks/useCurrentUser";
 import { Post, User } from "@/features/types";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
@@ -11,7 +12,7 @@ export const UserReplyPost = ({ user }: { user: User | null }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-
+  const { currentUser } = useCurrentUser();
   const loader = useRef<HTMLDivElement | null>(null);
 
   const fetchPosts = async (pageNum: number) => {
@@ -21,8 +22,7 @@ export const UserReplyPost = ({ user }: { user: User | null }) => {
 
     try {
       const response = await axiosInstance.get(
-        // TODO: fix this
-        `${config.url}/api/v1/posts?page=${pageNum}&limit=10&author=${user._id}`
+        `${config.url}/api/v1/posts/user-reply-posts?page=${pageNum}&limit=10&author=${user?._id}`
       );
 
       if (response.data.length === 0) {
@@ -81,7 +81,7 @@ export const UserReplyPost = ({ user }: { user: User | null }) => {
         <PostCard
           key={`${post._id}-${index}`}
           post={post}
-          currentUser={user || null}
+          currentUser={currentUser || null}
         />
       ))}
       {hasMore && (

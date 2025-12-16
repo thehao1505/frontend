@@ -2,8 +2,16 @@
 
 import { useState } from "react";
 import { Send } from "lucide-react";
+import axiosInstance from "@/lib/axios";
+import { config } from "@/lib/utils";
 
-export default function ShareButton({ link }: { link?: string }) {
+export default function ShareButton({
+  postId,
+  link,
+}: {
+  postId?: string;
+  link?: string;
+}) {
   const [copied, setCopied] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -12,6 +20,16 @@ export default function ShareButton({ link }: { link?: string }) {
     setTimeout(() => setIsClicked(false), 200);
 
     try {
+      if (postId) {
+        try {
+          await axiosInstance.post(
+            `${config.url}/api/v1/posts/${postId}/share`
+          );
+        } catch (error) {
+          console.error("Share API call failed:", error);
+        }
+      }
+
       if (typeof window !== "undefined" && navigator.clipboard) {
         await navigator.clipboard.writeText(link || window.location.href);
         setCopied(true);

@@ -1,5 +1,6 @@
 "use client";
 import { PostCard } from "@/features/common/components/PostCard";
+import useCurrentUser from "@/features/common/hooks/useCurrentUser";
 import { Post, User } from "@/features/types";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
@@ -10,6 +11,7 @@ export const UserPost = ({ user }: { user: User | null }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const { currentUser } = useCurrentUser();
 
   const loader = useRef<HTMLDivElement | null>(null);
 
@@ -79,7 +81,7 @@ export const UserPost = ({ user }: { user: User | null }) => {
         <PostCard
           key={`${post._id}-${index}`}
           post={post}
-          currentUser={user || null}
+          currentUser={currentUser || null}
         />
       ))}
       {hasMore && (

@@ -20,6 +20,7 @@ export const NotificationCard = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const handleIncomingNotification = useCallback(
     (notification: Notification) => {
@@ -57,11 +58,29 @@ export const NotificationCard = () => {
       return res.data || [];
     } catch (error) {
       console.log(error);
+      return [];
     }
   }, []);
 
+  const loadInitialNotifications = useCallback(async () => {
+    if (!currentUserId) return;
+    setIsInitialLoading(true);
+    setPage(1);
+    setHasMore(true);
+
+    const initialNotifications = await fetchNotifications(1);
+    if (initialNotifications.length === 0) {
+      setHasMore(false);
+      setNotifications([]);
+    } else {
+      setNotifications(initialNotifications);
+      setPage(2);
+    }
+
+    setIsInitialLoading(false);
+  }, [fetchNotifications, currentUserId]);
+
   const loadOlderNotifications = useCallback(async () => {
-    console.log(`loadOlderNotifications`);
     if (isLoadingMore || !hasMore) return;
     setIsLoadingMore(true);
 
@@ -73,17 +92,15 @@ export const NotificationCard = () => {
       setPage((prev) => prev + 1);
     }
 
-    setTimeout(() => {
-      setIsLoadingMore(false);
-    }, 0);
+    setIsLoadingMore(false);
   }, [fetchNotifications, page, isLoadingMore, hasMore]);
 
-  // Load initial notifications only once
+  // Load initial notifications when user changes
   useEffect(() => {
     if (currentUserId) {
-      loadOlderNotifications();
+      loadInitialNotifications();
     }
-  }, [currentUserId]); // Only depend on currentUserId, not loadOlderNotifications
+  }, [currentUserId, loadInitialNotifications]);
 
   useEffect(() => {
     const target = observerRef.current;
@@ -117,21 +134,28 @@ export const NotificationCard = () => {
         showBackButton={true}
       />
       <div className="bg-neutral-900 border-[1px] border-neutral-800 h-[calc(100vh-60px)] w-full rounded-t-3xl">
-        <div className="flex flex-col h-full pt-6">
-          {notifications.length === 0 && !isLoadingMore && (
+        <div className="flex flex-col h-full pt-6 overflow-y-auto">
+          {isInitialLoading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <p className="text-muted-foreground">Loading notifications...</p>
+            </div>
+          ) : notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full">
               <p className="text-muted-foreground">No notifications!</p>
             </div>
+          ) : (
+            <>
+              {notifications.map((noti) => (
+                <NotificationLabel key={noti._id} notification={noti} />
+              ))}
+              {isLoadingMore && (
+                <div className="flex justify-center py-4">
+                  <p className="text-muted-foreground">Loading more...</p>
+                </div>
+              )}
+              <div ref={observerRef} className="h-1" />
+            </>
           )}
-          {notifications.map((noti) => (
-            <NotificationLabel key={noti._id} notification={noti} />
-          ))}
-          {isLoadingMore && (
-            <div className="flex justify-center py-4">
-              <p className="text-muted-foreground">Loading more...</p>
-            </div>
-          )}
-          <div ref={observerRef} className="h-1" />
         </div>
       </div>
     </>

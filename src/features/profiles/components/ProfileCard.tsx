@@ -7,7 +7,7 @@ import useUser from "@/features/common/hooks/useUser";
 import axiosInstance from "@/lib/axios";
 import { cn, config } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { ChartNoAxesCombined, Instagram } from "lucide-react";
+import { ChartNoAxesCombined, Instagram, History } from "lucide-react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import EditProfileCard from "./EditProfileCard";
@@ -134,6 +134,13 @@ export const ProfileCard = () => {
                   {followersCounts} followers
                 </p>
                 <div className="flex flex-row gap-x-3">
+                  {user?._id === currentUser?._id && (
+                    <History
+                      size={24}
+                      className="text-white cursor-pointer"
+                      onClick={() => router.push(`/interactions`)}
+                    />
+                  )}
                   <ChartNoAxesCombined
                     size={24}
                     className="text-white cursor-pointer"

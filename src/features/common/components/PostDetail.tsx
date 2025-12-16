@@ -118,10 +118,6 @@ export const PostDetail = () => {
     postDetail?._id,
   ]);
 
-  useEffect(() => {
-    fetchReplyPosts(1);
-  }, [postDetail?._id]);
-
   const handleDelete = async () => {
     try {
       await axiosInstance.delete(
@@ -167,6 +163,9 @@ export const PostDetail = () => {
   const handleLoadMoreReplyPost = async () => {
     fetchReplyPosts(page);
   };
+  useEffect(() => {
+    fetchReplyPosts(1);
+  }, [postDetail?._id, currentUser?._id]);
 
   if (!username.startsWith("@") || error) {
     return notFound();
@@ -284,7 +283,7 @@ export const PostDetail = () => {
                 currentUser={currentUser}
                 onUpdate={updatePost}
               />
-              <ShareButton />
+              <ShareButton postId={postDetail?._id} />
             </div>
             <div className="flex flex-row items-center justify-between py-4">
               <p className="text-sm text-white font-semibold">Most related</p>
