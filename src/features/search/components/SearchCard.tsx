@@ -88,7 +88,7 @@ export const SearchCard = () => {
                   </div>
                 </div>
               )}
-              {/* // TODO: User suggestion below search bar. */}
+              {/* // TODO: User suggestion below search bar into this page. */}
             </div>
           ) : (
             <div className="pt-4 custom-messages-scroll-overlay">
