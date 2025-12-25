@@ -3,10 +3,16 @@
 import { Post, User } from "@/features/types";
 import axiosInstance from "@/lib/axios";
 import { config } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PostCard } from "./PostCard";
 
-export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
+export const FeedCard = ({
+  currentUser,
+  feedType = "forYou",
+}: {
+  currentUser: User | null;
+  feedType?: "forYou" | "following";
+}) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -14,31 +20,46 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
 
   const loader = useRef<HTMLDivElement | null>(null);
 
-  const fetchPosts = async (pageNum: number, limit: number) => {
-    if (!hasMore || !currentUser?._id || isLoading) return;
+  const fetchPosts = useCallback(
+    async (pageNum: number, limit: number) => {
+      if (!currentUser?._id) return;
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
-      const response = await axiosInstance.get(
-        `${config.url}/api/v1/recommendations/hybrid?page=${pageNum}&limit=${limit}`
-      );
-
-      if (response.data.items.length === 0) {
-        setHasMore(false);
-      } else {
-        if (pageNum === 1) {
-          setPosts(response.data.items);
+      try {
+        let response;
+        if (feedType === "following") {
+          // Fetch posts from users I follow
+          response = await axiosInstance.get(
+            `${config.url}/api/v1/posts?page=${pageNum}&limit=${limit}&following=true`
+          );
         } else {
-          setPosts((prev) => [...prev, ...response.data.items]);
+          // Fetch recommended posts (For You)
+          response = await axiosInstance.get(
+            `${config.url}/api/v1/recommendations/hybrid?page=${pageNum}&limit=${limit}`
+          );
         }
+
+        const items =
+          feedType === "following" ? response.data : response.data.items;
+
+        if (items.length === 0) {
+          setHasMore(false);
+        } else {
+          if (pageNum === 1) {
+            setPosts(items);
+          } else {
+            setPosts((prev) => [...prev, ...items]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching posts: ", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching posts: ", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [currentUser?._id, feedType]
+  );
 
   useEffect(() => {
     if (currentUser?._id) {
@@ -47,13 +68,13 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
       setHasMore(true);
       fetchPosts(1, 10);
     }
-  }, [currentUser?._id]);
+  }, [currentUser?._id, feedType, fetchPosts]);
 
   useEffect(() => {
-    if (page > 1) {
+    if (page > 1 && currentUser?._id) {
       fetchPosts(page, 10);
     }
-  }, [page]);
+  }, [page, currentUser?._id, fetchPosts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -67,7 +88,9 @@ export const FeedCard = ({ currentUser }: { currentUser: User | null }) => {
     );
 
     const currentLoader = loader.current;
-    if (currentLoader) observer.observe(currentLoader);
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
 
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);

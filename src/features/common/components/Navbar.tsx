@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 interface NavbarProps {
-  title: string;
+  title: string | React.ReactNode;
   showBackButton?: boolean;
   showOptionsButton?: boolean;
   onOptionsClick?: () => void;
