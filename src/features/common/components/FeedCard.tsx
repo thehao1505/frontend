@@ -41,7 +41,7 @@ export const FeedCard = ({
         }
 
         const items =
-          feedType === "following" ? response.data : response.data.items;
+          feedType === "following" ? response.data.items : response.data.items;
 
         if (items.length === 0) {
           setHasMore(false);
@@ -99,7 +99,7 @@ export const FeedCard = ({
 
   return (
     <div className="flex-1 custom-messages-scroll-overlay">
-      {posts.map((post, index) => (
+      {posts?.map((post, index) => (
         <PostCard
           key={`${post._id}-${index}`}
           post={post}
