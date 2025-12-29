@@ -31,7 +31,7 @@ export const FeedCard = ({
         if (feedType === "following") {
           // Fetch posts from users I follow
           response = await axiosInstance.get(
-            `${config.url}/api/v1/posts?page=${pageNum}&limit=${limit}&following=true`
+            `${config.url}/api/v1/recommendations/following?page=${pageNum}&limit=${limit}`
           );
         } else {
           // Fetch recommended posts (For You)
