@@ -14,6 +14,7 @@ export interface Post {
   updatedAt: string;
   parentId: string;
   likeCount: number;
+  source?: string;
 }
 
 export interface User {

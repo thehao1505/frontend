@@ -192,6 +192,14 @@ export const PostCard = ({ currentUser, post }: PostCardProp) => {
                   addSuffix: true,
                 })}
               </span>
+              {post.source && (
+                <>
+                  <span className="text-xs text-muted-foreground">• </span>
+                  <span className="text-xs text-muted-foreground">
+                    {post.source}
+                  </span>
+                </>
+              )}
             </div>
             {currentUser?._id === post.author._id && (
               <DropdownMenu>
